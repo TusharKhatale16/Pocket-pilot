@@ -14,10 +14,27 @@ const monthlySavingsText = document.getElementById('monthlySavings');
 const mockTransactions = [
     { id: '1', date: '2026-06-02', description: 'Groceries', category: 'Food', amount: 210, type: 'expense' },
     { id: '2', date: '2026-06-05', description: 'Salary', category: 'Income', amount: 4200, type: 'income' },
-    { id: '3', date: '2026-06-08', description: 'Utilities', category: 'Bills', amount: 160, type: 'expense' }
+    { id: '3', date: '2026-06-08', description: 'Utilities', category: 'Bills', amount: 160, type: 'expense' },
+    { id: '4', date: '2026-06-10', description: 'Monthly rent', category: 'Housing', amount: 1200, type: 'expense' },
+    { id: '5', date: '2026-06-12', description: 'Internet plan', category: 'Bills', amount: 60, type: 'expense' },
+    { id: '6', date: '2026-06-14', description: 'Lunch with friends', category: 'Dining', amount: 75, type: 'expense' },
+    { id: '7', date: '2026-06-16', description: 'Electricity bill', category: 'Bills', amount: 95, type: 'expense' },
+    { id: '8', date: '2026-06-18', description: 'Gas refill', category: 'Transport', amount: 55, type: 'expense' },
+    { id: '9', date: '2026-06-20', description: 'Movie night', category: 'Entertainment', amount: 45, type: 'expense' },
+    { id: '10', date: '2026-06-22', description: 'Freelance payment', category: 'Income', amount: 850, type: 'income' },
+    { id: '11', date: '2026-06-24', description: 'Clothing', category: 'Lifestyle', amount: 130, type: 'expense' },
+    { id: '12', date: '2026-06-26', description: 'Gym membership', category: 'Health', amount: 55, type: 'expense' }
 ];
 
+function seedTransactionsIfEmpty() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockTransactions));
+    }
+}
+
 function getStoredTransactions() {
+    seedTransactionsIfEmpty();
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
         return mockTransactions;
