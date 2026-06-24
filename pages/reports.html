@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | Smart Expense Manager</title>
+    <link rel="stylesheet" href="../css/reports.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Main navigation">
+            <div class="brand-breakout">
+                <span class="brand-logo">SE</span>
+                <div>
+                    <p class="brand-name">Smart Expense</p>
+                    <p class="brand-tag">Reports</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="add-expense.html">Add Expense</a></li>
+                    <li><a class="active" href="reports.html">Reports</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content-area">
+            <header class="page-header">
+                <div>
+                    <p class="eyebrow">Analytics</p>
+                    <h1>Reports & Analytics</h1>
+                </div>
+                <p class="page-copy">A simple reports page to track budget progress and spending patterns.</p>
+            </header>
+
+            <section class="budget-tracker" aria-labelledby="budget-tracker-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Budget Progress Tracker</p>
+                        <h2 id="budget-tracker-heading">Monthly budget overview</h2>
+                    </div>
+                    <p class="budget-summary">Budget limit: <strong id="budgetLimitText">$3,000</strong></p>
+                </div>
+                <div class="budget-details">
+                    <div class="budget-metrics">
+                        <div>
+                            <span class="metric-label">Total spent</span>
+                            <strong id="spentAmount">$0</strong>
+                        </div>
+                        <div>
+                            <span class="metric-label">Remaining</span>
+                            <strong id="remainingAmount">$0</strong>
+                        </div>
+                    </div>
+                    <div class="progress-wrapper" aria-label="Budget usage progress">
+                        <div class="progress-bar" id="budgetProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <span class="progress-label" id="progressLabel">0%</span>
+                        </div>
+                    </div>
+                    <p class="budget-warning" id="budgetWarning">Budget status will appear here.</p>
+                </div>
+            </section>
+
+            <section class="analytics-grid" aria-labelledby="analytics-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Visual Analytics</p>
+                        <h2 id="analytics-heading">Category and monthly comparison</h2>
+                    </div>
+                </div>
+                <article class="chart-card">
+                    <header>
+                        <h3>Category-wise Expense Chart</h3>
+                    </header>
+                    <div class="chart-frame">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </article>
+                <article class="chart-card">
+                    <header>
+                        <h3>Monthly Expense Comparison</h3>
+                    </header>
+                    <div class="chart-frame">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <section class="insights-grid" aria-labelledby="insights-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Quick Insights</p>
+                        <h2 id="insights-heading">Top spending signals</h2>
+                    </div>
+                </div>
+                <article class="insight-card">
+                    <h3>Highest Spending Category</h3>
+                    <p id="highestCategory">No data yet</p>
+                </article>
+                <article class="insight-card">
+                    <h3>Monthly Savings</h3>
+                    <p id="monthlySavings">No data yet</p>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/reports.js"></script>
+</body>
+</html>
