@@ -10,6 +10,8 @@ const budgetWarningText = document.getElementById('budgetWarning');
 const budgetProgressBar = document.getElementById('budgetProgressBar');
 const highestCategoryText = document.getElementById('highestCategory');
 const monthlySavingsText = document.getElementById('monthlySavings');
+const categoryChartCanvas = document.getElementById('categoryChart');
+const monthlyChartCanvas = document.getElementById('monthlyChart');
 
 const mockTransactions = [
     { id: '1', date: '2026-06-02', description: 'Groceries', category: 'Food', amount: 210, type: 'expense' },
@@ -64,6 +66,111 @@ function calculateTotals(transactions) {
     );
 }
 
+function calculateCategoryTotals(transactions) {
+    return transactions.reduce((totals, transaction) => {
+        if (transaction.type !== 'expense') {
+            return totals;
+        }
+
+        const category = transaction.category || 'Other';
+        totals[category] = (totals[category] || 0) + Number(transaction.amount || 0);
+        return totals;
+    }, {});
+}
+
+function getHighestCategory(categoryTotals) {
+    const entries = Object.entries(categoryTotals);
+    if (entries.length === 0) {
+        return { category: 'None', amount: 0 };
+    }
+
+    return entries.reduce((top, current) => {
+        return current[1] > top.amount ? { category: current[0], amount: current[1] } : top;
+    }, { category: '', amount: 0 });
+}
+
+function renderCategoryChart(categoryTotals) {
+    const labels = Object.keys(categoryTotals);
+    const data = Object.values(categoryTotals);
+
+    if (window.categoryChartInstance) {
+        window.categoryChartInstance.destroy();
+    }
+
+    window.categoryChartInstance = new Chart(categoryChartCanvas, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [
+                {
+                    data,
+                    backgroundColor: ['#3b82f6', '#f97316', '#22c55e', '#8b5cf6', '#ef4444', '#0ea5e9', '#facc15'],
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#102a43'
+                    }
+                }
+            },
+            maintainAspectRatio: false,
+        }
+    });
+}
+
+function renderMonthlyChart(income, expenses) {
+    const labels = ['Income', 'Expenses'];
+    const data = [income, expenses];
+
+    if (window.monthlyChartInstance) {
+        window.monthlyChartInstance.destroy();
+    }
+
+    window.monthlyChartInstance = new Chart(monthlyChartCanvas, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Monthly totals',
+                    data,
+                    backgroundColor: ['#22c55e', '#ef4444'],
+                    borderRadius: 12,
+                    borderSkipped: false,
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#486581'
+                    },
+                    grid: {
+                        color: '#e2e8f0'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#486581'
+                    }
+                }
+            },
+            maintainAspectRatio: false,
+        }
+    });
+}
+
 function updateBudget(expenses) {
     const remaining = Math.max(monthlyBudget - expenses, 0);
     const percent = Math.min(Math.round((expenses / monthlyBudget) * 100), 100);
@@ -87,10 +194,14 @@ function updateBudget(expenses) {
 function initializeReports() {
     const transactions = getStoredTransactions();
     const totals = calculateTotals(transactions);
+    const categoryTotals = calculateCategoryTotals(transactions);
+    const highestCategory = getHighestCategory(categoryTotals);
     const savings = Math.max(totals.income - totals.expenses, 0);
 
     updateBudget(totals.expenses);
-    highestCategoryText.textContent = 'Pending category analytics';
+    renderCategoryChart(categoryTotals);
+    renderMonthlyChart(totals.income, totals.expenses);
+    highestCategoryText.textContent = `${highestCategory.category} — $${highestCategory.amount}`;
     monthlySavingsText.textContent = `$${savings}`;
 }
 
